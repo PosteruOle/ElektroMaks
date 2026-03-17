@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elektro-Maks | Električne instalacije</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --text: #1e2340;
+      --muted: #5a617f;
+      --primary: #1f2a7a;
+      --primary-soft: #e8ecff;
+      --border: #d9def2;
+      --success: #20734d;
+      --shadow: 0 10px 30px rgba(31, 42, 122, 0.12);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0d1020;
+      --surface: #151a32;
+      --text: #edf0ff;
+      --muted: #b3bcdf;
+      --primary: #91a7ff;
+      --primary-soft: #1f2850;
+      --border: #2d3968;
+      --success: #76d5a8;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .controls {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 30;
+    }
+
+    .lang-select {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.15s ease;
+    }
+
+    .theme-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .switch-track {
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      position: relative;
+      border: 1px solid var(--border);
+    }
+
+    .switch-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s ease;
+    }
+
+    [data-theme="dark"] .switch-thumb {
+      transform: translateX(20px);
+    }
+
+    header {
+      padding: 100px 20px 40px;
+      text-align: center;
+    }
+
+    .hero {
+      max-width: 980px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px 24px 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      width: min(520px, 100%);
+      height: auto;
+    }
+
+    .tagline {
+      margin: 8px auto 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      border-color: var(--border);
+      color: var(--text);
+      background: transparent;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1050px;
+      margin: 24px auto 48px;
+      padding: 0 20px;
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      color: var(--primary);
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 8px 0 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .contact {
+      display: grid;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .notice {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      padding: 0 20px 30px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 760px) {
+      .controls {
+        top: 12px;
+        right: 12px;
+        gap: 8px;
+      }
+
+      .theme-label {
+        display: none;
+      }
+
+      header {
+        padding-top: 86px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <select id="langSelect" class="lang-select" aria-label="Jezik">
+      <option value="sr">SR</option>
+      <option value="en">EN</option>
+      <option value="de">DE</option>
+    </select>
+
+    <button id="themeToggle" class="theme-button" type="button" aria-label="Promeni temu">
+      <span id="themeLabel" class="theme-label">Svetlo</span>
+      <span class="switch-track"><span class="switch-thumb"></span></span>
+    </button>
+  </div>
+
+  <header>
+    <div class="hero">
+      <img src="images/elektro_maks_logo.png" alt="Elektro-Maks logo" class="logo">
+      <p class="tagline" data-i18n="tagline">
+        Profesionalne električne instalacije za domove, stanove, poslovne objekte i industrijske sisteme.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#kontakt" data-i18n="ctaContact">Zakažite izlazak na teren</a>
+        <a class="btn btn-secondary" href="#usluge" data-i18n="ctaServices">Pogledajte usluge</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="o-nama">
+      <h2 data-i18n="aboutTitle">O nama</h2>
+      <p data-i18n="aboutText">
+        Elektro-Maks je lokalna firma koju vodi Stefan Maksimović, električar sa iskustvom u izvođenju
+        i održavanju svih vrsta elektroinstalacija. Fokus nam je bezbedna, precizna i dugotrajna izvedba
+        radova, uz poštovanje dogovorenih rokova.
+      </p>
+    </section>
+
+    <div class="grid">
+      <section id="usluge">
+        <h2 data-i18n="servicesTitle">Usluge</h2>
+        <ul>
+          <li data-i18n="service1">Kompletne instalacije u novogradnji i adaptaciji</li>
+          <li data-i18n="service2">Zamena starih elektroinstalacija i razvodnih tabli</li>
+          <li data-i18n="service3">Montaža rasvete, utičnica, prekidača i osigurača</li>
+          <li data-i18n="service4">Detekcija i otklanjanje kvarova</li>
+          <li data-i18n="service5">Uzemljenje i zaštita instalacija</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 data-i18n="whyTitle">Zašto Elektro-Maks</h2>
+        <ul>
+          <li data-i18n="why1">Kvalitetni materijali i proverena oprema</li>
+          <li data-i18n="why2">Profesionalan pristup i jasna komunikacija</li>
+          <li data-i18n="why3">Brz izlazak na teren po dogovoru</li>
+          <li data-i18n="why4">Poštovanje bezbednosnih standarda</li>
+        </ul>
+      </section>
+    </div>
+
+    <section>
+      <h2 data-i18n="processTitle">Kako radimo</h2>
+      <ol>
+        <li data-i18n="process1">Kratke konsultacije i procena na licu mesta.</li>
+        <li data-i18n="process2">Predlog rešenja i dogovor oko obima radova.</li>
+        <li data-i18n="process3">Izvođenje instalacija i završna provera sistema.</li>
+      </ol>
+      <p class="notice" data-i18n="processNotice">Pouzdan partner za struju u vašem domu i firmi.</p>
+    </section>
+
+    <section id="kontakt">
+      <h2 data-i18n="contactTitle">Kontakt</h2>
+      <div class="contact">
+        <span data-i18n="contactName">Elektro-Maks, Stefan Maksimović</span>
+        <span data-i18n="contactPhone">Telefon: +381 6X XXX XX XX</span>
+        <span data-i18n="contactEmail">E-mail: kontakt@elektro-maks.rs</span>
+        <span data-i18n="contactCity">Lokacija: Srbija</span>
+      </div>
+    </section>
+  </main>
+
+  <footer data-i18n="footerText">
+    © Elektro-Maks. Sva prava zadržana.
+  </footer>
+
+  <script>
+    const STORAGE_THEME_KEY = "elektro-maks-theme";
+    const STORAGE_LANG_KEY = "elektro-maks-lang";
+
+    const translations = {
+      sr: {
+        themeLight: "Svetlo",
+        themeDark: "Tamno",
+        tagline: "Profesionalne električne instalacije za domove, stanove, poslovne objekte i industrijske sisteme.",
+        ctaContact: "Zakažite izlazak na teren",
+        ctaServices: "Pogledajte usluge",
+        aboutTitle: "O nama",
+        aboutText: "Elektro-Maks je lokalna firma koju vodi Stefan Maksimović, električar sa iskustvom u izvođenju i održavanju svih vrsta elektroinstalacija. Fokus nam je bezbedna, precizna i dugotrajna izvedba radova, uz poštovanje dogovorenih rokova.",
+        servicesTitle: "Usluge",
+        service1: "Kompletne instalacije u novogradnji i adaptaciji",
+        service2: "Zamena starih elektroinstalacija i razvodnih tabli",
+        service3: "Montaža rasvete, utičnica, prekidača i osigurača",
+        service4: "Detekcija i otklanjanje kvarova",
+        service5: "Uzemljenje i zaštita instalacija",
+        whyTitle: "Zašto Elektro-Maks",
+        why1: "Kvalitetni materijali i proverena oprema",
+        why2: "Profesionalan pristup i jasna komunikacija",
+        why3: "Brz izlazak na teren po dogovoru",
+        why4: "Poštovanje bezbednosnih standarda",
+        processTitle: "Kako radimo",
+        process1: "Kratke konsultacije i procena na licu mesta.",
+        process2: "Predlog rešenja i dogovor oko obima radova.",
+        process3: "Izvođenje instalacija i završna provera sistema.",
+        processNotice: "Pouzdan partner za struju u vašem domu i firmi.",
+        contactTitle: "Kontakt",
+        contactName: "Elektro-Maks, Stefan Maksimović",
+        contactPhone: "Telefon: +381 6X XXX XX XX",
+        contactEmail: "E-mail: kontakt@elektro-maks.rs",
+        contactCity: "Lokacija: Srbija",
+        footerText: "© Elektro-Maks. Sva prava zadržana."
+      },
+      en: {
+        themeLight: "Light",
+        themeDark: "Dark",
+        tagline: "Professional electrical installations for homes, apartments, offices, and industrial systems.",
+        ctaContact: "Book a site visit",
+        ctaServices: "View services",
+        aboutTitle: "About us",
+        aboutText: "Elektro-Maks is a local company led by Stefan Maksimovic, an electrician experienced in building and maintaining all types of electrical systems. We focus on safe, precise, and long-lasting work, delivered within agreed deadlines.",
+        servicesTitle: "Services",
+        service1: "Complete installations for new buildings and renovations",
+        service2: "Replacement of old wiring and distribution boards",
+        service3: "Installation of lighting, outlets, switches, and fuses",
+        service4: "Fault detection and repair",
+        service5: "Grounding and installation protection",
+        whyTitle: "Why Elektro-Maks",
+        why1: "Quality materials and trusted equipment",
+        why2: "Professional approach and clear communication",
+        why3: "Fast on-site response by appointment",
+        why4: "Compliance with safety standards",
+        processTitle: "How we work",
+        process1: "Short consultation and on-site assessment.",
+        process2: "Solution proposal and agreement on scope.",
+        process3: "Installation work and final system check.",
+        processNotice: "A reliable electrical partner for your home and business.",
+        contactTitle: "Contact",
+        contactName: "Elektro-Maks, Stefan Maksimovic",
+        contactPhone: "Phone: +381 6X XXX XX XX",
+        contactEmail: "E-mail: kontakt@elektro-maks.rs",
+        contactCity: "Location: Serbia",
+        footerText: "© Elektro-Maks. All rights reserved."
+      },
+      de: {
+        themeLight: "Hell",
+        themeDark: "Dunkel",
+        tagline: "Professionelle Elektroinstallationen fur Hauser, Wohnungen, Geschaftsobjekte und Industriesysteme.",
+        ctaContact: "Vor-Ort-Termin buchen",
+        ctaServices: "Leistungen ansehen",
+        aboutTitle: "Uber uns",
+        aboutText: "Elektro-Maks ist ein lokales Unternehmen unter der Leitung von Stefan Maksimovic, einem Elektriker mit Erfahrung in der Umsetzung und Wartung aller Arten von Elektroinstallationen. Unser Fokus liegt auf sicherer, praziser und langlebiger Arbeit innerhalb vereinbarter Fristen.",
+        servicesTitle: "Leistungen",
+        service1: "Komplette Installationen bei Neubau und Sanierung",
+        service2: "Austausch alter Elektroinstallationen und Verteiler",
+        service3: "Montage von Beleuchtung, Steckdosen, Schaltern und Sicherungen",
+        service4: "Fehlersuche und Storungsbehebung",
+        service5: "Erdung und Schutz der Installationen",
+        whyTitle: "Warum Elektro-Maks",
+        why1: "Hochwertige Materialien und geprufte Ausrustung",
+        why2: "Professioneller Ansatz und klare Kommunikation",
+        why3: "Schneller Vor-Ort-Service nach Vereinbarung",
+        why4: "Einhaltung von Sicherheitsstandards",
+        processTitle: "So arbeiten wir",
+        process1: "Kurze Beratung und Bewertung vor Ort.",
+        process2: "Losungsvorschlag und Abstimmung des Leistungsumfangs.",
+        process3: "Ausfuhrung der Arbeiten und abschlieBende Systemprufung.",
+        processNotice: "Ein zuverlassiger Partner fur Strom in Haus und Unternehmen.",
+        contactTitle: "Kontakt",
+        contactName: "Elektro-Maks, Stefan Maksimovic",
+        contactPhone: "Telefon: +381 6X XXX XX XX",
+        contactEmail: "E-mail: kontakt@elektro-maks.rs",
+        contactCity: "Standort: Serbien",
+        footerText: "© Elektro-Maks. Alle Rechte vorbehalten."
+      }
+    };
+
+    function applyTranslations(lang) {
+      const dictionary = translations[lang] || translations.sr;
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.getAttribute("data-i18n");
+        if (dictionary[key]) {
+          element.textContent = dictionary[key];
+        }
+      });
+
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      document.getElementById("themeLabel").textContent = isDark ? dictionary.themeDark : dictionary.themeLight;
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem(STORAGE_THEME_KEY, theme);
+      const lang = document.getElementById("langSelect").value;
+      const dictionary = translations[lang] || translations.sr;
+      document.getElementById("themeLabel").textContent = theme === "dark" ? dictionary.themeDark : dictionary.themeLight;
+    }
+
+    const savedTheme = localStorage.getItem(STORAGE_THEME_KEY) || "light";
+    const savedLang = localStorage.getItem(STORAGE_LANG_KEY) || "sr";
+
+    document.getElementById("langSelect").value = savedLang;
+    applyTheme(savedTheme);
+    applyTranslations(savedLang);
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+    });
+
+    document.getElementById("langSelect").addEventListener("change", (event) => {
+      const lang = event.target.value;
+      localStorage.setItem(STORAGE_LANG_KEY, lang);
+      applyTranslations(lang);
+    });
+  </script>
+</body>
+</html>
