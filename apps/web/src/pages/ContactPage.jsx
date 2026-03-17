@@ -16,14 +16,14 @@ const ContactPage = () => {
     {
       icon: Phone,
       label: t.contact.phoneLabel,
-      value: '+381 64 123 4567',
-      href: 'tel:+381641234567'
+      value: '+381649338800',
+      href: 'tel:+381649338800'
     },
     {
       icon: Mail,
       label: t.contact.emailLabel,
-      value: 'stefan@elektromaks.rs',
-      href: 'mailto:stefan@elektromaks.rs'
+      value: 'maksaub1@gmail.com',
+      href: 'mailto:maksaub1@gmail.com'
     },
     {
       icon: MapPin,
